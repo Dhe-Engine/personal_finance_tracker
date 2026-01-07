@@ -29,7 +29,18 @@ class CSV:
             csv_write.writerow(new_data)
         print("Data added successfully!")
 
-CSV.initialize_csv()
-CSV.add_data("07-01-2026",67000.00,"Income","Jewelry")
+def start():
+    CSV.initialize_csv()
+    date = get_date("Enter transaction date (dd-mm-yyyy) format: ",
+                    allow_default=True)
+    amount = get_amount()
+    category = get_category()
+    description = get_description()
+
+    #take user input to the csv file
+    CSV.add_data(date,amount,category,description)
+
+start()
+
 
 
