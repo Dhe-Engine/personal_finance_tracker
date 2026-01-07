@@ -2,6 +2,7 @@ import pandas as pd
 import csv
 from datetime import datetime
 from data_entry import get_date,get_category,get_amount,get_description
+import matplotlib.pyplot as plt
 
 class CSV:
     CSV_FILE = "finance_data.csv"
@@ -68,6 +69,28 @@ def start():
     #take user input to the csv file
     CSV.add_data(date,amount,category,description)
 
+def graph_transaction(finance_df):
+    finance_df.set_index("date", inplace=True)
+
+    income_df = finance_df[finance_df["category"] == "Income"].resample("D").sum().reindex(
+        finance_df.index, fill_value=0
+    )
+
+    expense_df = finance_df[finance_df["category"] == "Expense"].resample("D").sum().reindex(
+        finance_df.index, fill_value=0
+    )
+
+    plt.figure(figsize = (10,5))
+    plt.plot(income_df.index, income_df["amount"], label = "Income", color = "orange")
+    plt.plot(expense_df.index, expense_df["amount"], label = "Expense", color = "black")
+    plt.xlabel("Date")
+    plt.ylabel("Amount")
+    plt.title("Income and Expense over time")
+    plt.legend()
+    plt.grid()
+    plt.show()
+
+
 def main():
     while True:
         print("\n1. Add New Transaction")
@@ -80,7 +103,9 @@ def main():
         elif user_choice == 2:
             start_date = get_date("Enter start date (dd-mm-yyyy): ")
             end_date = get_date("Enter end date (dd-mm-yyyy): ")
-            CSV.get_transactions(start_date, end_date)
+            date_df = CSV.get_transactions(start_date, end_date)
+            if input("Show transaction in graph (yes/no): ").lower() == "yes":
+                graph_transaction(date_df)
         elif user_choice == 3:
             print("End of Program")
             break
