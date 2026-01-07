@@ -1,6 +1,7 @@
 import pandas as pd
 import csv
 from datetime import datetime
+from data_entry import get_date,get_category,get_amount,get_description
 
 class CSV:
     CSV_FILE = "finance_data.csv"
