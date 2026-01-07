@@ -1,32 +1,42 @@
-import pandas as pd
-import csv
 from datetime import datetime
 
-class CSV:
-    CSV_FILE = "finance_data.csv"
-    COLUMNS = ["date","amount","category","description"]
+date_format = "%d-/%m-/%Y"
+CATEGORIES = {
+    "I": "Income",
+    "E": "Expense"
+}
 
-    @classmethod
-    def initialize_csv(cls):
-        try:
-            pd.read_csv(cls.CSV_FILE)
-        except FileNotFoundError:
-            finance_df = pd.DataFrame(columns=cls.COLUMNS)
-            finance_df.to_csv(cls.CSV_FILE, index=False)
+def get_date(prompt, allow_default=False):
+    date_str = input(prompt)
+    if allow_default and not date_str:
+        return datetime.today().strftime(date_format)
 
-    @classmethod
-    def add_data(cls,date,amount,category,description):
-        new_data = {
-            "date":date,
-            "amount":amount,
-            "category":category,
-            "description":description
-        }
+    try:
+        valid_date = datetime.strptime(date_str, date_format)
+        return valid_date.strftime(date_format)
+    except ValueError:
+        print("Invalid date format. Please enter the date in dd-mm-yyyy format")
+        return get_date(prompt,allow_default)
 
-        with open(cls.CSV_FILE, mode="a", newline="") as finance_csv:
-            csv_write = csv.DictWriter(finance_csv, fieldnames=cls.COLUMNS)
-            csv_write.writerow(new_data)
-        print("Data added successfully!")
+def get_amount():
+    try:
+        amount = float(input("Enter amount: "))
+        if amount <= 0:
+            raise ValueError("Amount must be non-negative or non-zero value")
+        return amount
+    except ValueError as e:
+        print(e)
+        return get_amount()
 
-CSV.initialize_csv()
-CSV.add_data("07-01-2026",67000.00,"Income","Jewelry")
+def get_category():
+    category = input("Enter the category 'I' for Income or 'E' for Expense: ").upper()
+    if category in CATEGORIES:
+        return CATEGORIES[category]
+    else:
+        print("Invalid category")
+        return get_category()
+
+def get_description():
+    description = input("Enter description: ")
+    return description
+
