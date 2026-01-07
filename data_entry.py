@@ -1,6 +1,6 @@
 from datetime import datetime
 
-date_format = "%d-/%m-/%Y"
+date_format = "%d-%m-%Y"
 CATEGORIES = {
     "I": "Income",
     "E": "Expense"

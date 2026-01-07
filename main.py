@@ -6,7 +6,7 @@ from data_entry import get_date,get_category,get_amount,get_description
 class CSV:
     CSV_FILE = "finance_data.csv"
     COLUMNS = ["date","amount","category","description"]
-    DATE_FORMAT = "%d-/%m-/%Y"
+    DATE_FORMAT = "%d-%m-%Y"
 
     @classmethod
     def initialize_csv(cls):
@@ -68,7 +68,30 @@ def start():
     #take user input to the csv file
     CSV.add_data(date,amount,category,description)
 
-start()
+def main():
+    while True:
+        print("\n1. Add New Transaction")
+        print("2. View Transactions")
+        print("3. Exit Program")
+
+        user_choice = int(input("Selet Option (1-3): "))
+        if user_choice == 1:
+            start()
+        elif user_choice == 2:
+            start_date = get_date("Enter start date (dd-mm-yyyy): ")
+            end_date = get_date("Enter end date (dd-mm-yyyy): ")
+            CSV.get_transactions(start_date, end_date)
+        elif user_choice == 3:
+            print("End of Program")
+            break
+        else:
+            print("Index out of range")
+            main()
+
+if __name__ == "__main__":
+    main()
+
+
 
 
 
